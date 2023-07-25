@@ -54,15 +54,26 @@ class ExportSelectedToMaya(bpy.types.Operator):
     bl_label = "Export To Maya"
     
     def execute(self, context):
-        export_selected()
+        export_selected(self)
         return {'FINISHED'}
+
+def InfoMessage(message = "", title = "Info Box", icon = 'INFO'):
+    def draw(self, context):
+        self.layout.label(text=message)
+    
+    bpy.context.window_manager.popup_menu(draw, title = title, icon = icon)
         
-def export_selected():
+def export_selected(self):
     path, ext = os.path.splitext(bpy.data.filepath)
     path += '.fbx'
     #writer.writeDirectory(path, mainPath)
-    writeSourceDirectory(path)
-    bpy.ops.export_scene.fbx(filepath = path, use_selection=True)
+    if bpy.data.is_saved:
+        writeSourceDirectory(path)
+        bpy.ops.export_scene.fbx(filepath = path, use_selection=True)
+        InfoMessage("Import from Maya to see changes", "Transfer Successful")
+    else:
+        InfoMessage("Cannot transfer unsaved project", "Export Error", 'ERROR')
+        #self.report({"WARNING"}, "Cannot transfer unsaved project")
 
 def writeSourceDirectory(path):
     srcPath = os.path.expanduser('~\Documents')

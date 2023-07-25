@@ -14,12 +14,12 @@ import os
 import subprocess
 import sys
 
-scriptFile = os.path.dirname(os.path.abspath(__file__))
-mainPath = scriptFile
+#scriptFile = os.path.dirname(os.path.abspath(__file__))
+#mainPath = scriptFile
 #mainPath = os.path.dirname(bpy.context.space_data.text.filepath)
-sys.path.append(scriptFile)
+#sys.path.append(mainPath)
 
-import pathwriter as writer
+#import pathwriter as writer
 
 class MayaPanel(bpy.types.Panel):
     bl_label = "Maya Bridge"
@@ -60,9 +60,23 @@ class ExportSelectedToMaya(bpy.types.Operator):
 def export_selected():
     path, ext = os.path.splitext(bpy.data.filepath)
     path += '.fbx'
-    writer.writeDirectory(path, mainPath)
+    #writer.writeDirectory(path, mainPath)
+    writeSourceDirectory(path)
     bpy.ops.export_scene.fbx(filepath = path, use_selection=True)
 
+def writeSourceDirectory(path):
+    srcPath = os.path.expanduser('~\Documents')
+    directory = 'Blaya Source'
+
+    if not os.path.exists(os.path.join(srcPath, directory)):
+        os.makedirs(os.path.join(srcPath, directory))
+        
+    txtDirectory = '_path.txt'
+    folder = os.path.join(srcPath, directory)
+    txtDirectory = os.path.join(folder, txtDirectory)
+    
+    with open(txtDirectory, 'w+') as file:
+        file.write(path)
 
 def register():
     bpy.utils.register_class(MayaPanel)

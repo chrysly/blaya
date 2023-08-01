@@ -1,7 +1,7 @@
 bl_info = {
     "name" : "Maya Bridge (Blender Port)",
     "author" : "chrysly",
-    "version" : (1, 0),
+    "version" : (1, 1),
     "blender" : (3, 6, 1),
     "location" : "View3d > Tool",
     "warning" : "",
@@ -44,7 +44,10 @@ class SelectAllMesh(bpy.types.Operator):
     def execute(self, context):
         objects = bpy.context.scene.objects
         for obj in objects:
-            obj.select_set(obj.type == "MESH")
+            try:
+                obj.select_set(obj.type == "MESH")
+            except:
+                print("[!] Selection error encountered")
         return {'FINISHED'}
 
 class ExportSelectedToMaya(bpy.types.Operator):

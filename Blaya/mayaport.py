@@ -17,17 +17,13 @@ def refExists():
             return True
     return False
 
-try:
-    file_path = readDirectory()
-    if (file_path != ""):
-        if (refExists() == True):
-            for ref in cmds.ls(type = 'reference'):
-                i += 1 
+file_path = readDirectory()
+if (True):
+    if (refExists() == True):
+        for ref in cmds.ls(type = 'reference'):
+            try:
                 cmds.file(loadReference = ref)
-        else:
-            new_nodes = cmds.file(file_path, reference = True)
-except:
-    print("Empty reference")
-
-with open(path, 'w+') as file:
-        file.write("")
+            except:
+                print("Empty reference")
+    else:
+        new_nodes = cmds.file(file_path, reference = True)
